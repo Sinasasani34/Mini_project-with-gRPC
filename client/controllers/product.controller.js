@@ -2,14 +2,51 @@ const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 const path = require("path");
 
-const productProtorotoPath = path.join(__dirname, "..", "protos", "product.proto");
-const productProto = protoLoader.loadSync(protoPath);
+const productProtorotoPath = path.join(__dirname, "..", "..", "protos", "product.proto");
+const productProto = protoLoader.loadSync(productProtorotoPath);
 const { productPackage } = grpc.loadPackageDefinition(productProto);
 const productServiceURL = "localhost:4001";
 const productClient = new productPackage.ProductService(productServiceURL, grpc.credentials.createInsecure());
 
-async function listProduct (req, res, next) {}
-async function getProduct (req, res, next) {}
-async function createProduct (req, res, next) {}
-async function updateProduct (req, res, next) {}
-async function deleteProduct (req, res, next) {}
+function listProduct(req, res, next) {
+    productClient.listProduct(null, (error, data) => {
+        if (error) return res.json(error);
+        return res.json(data);
+    })
+}
+function getProduct(req, res, next) {
+    const { id } = req.params;
+    productClient.getProduct({ id }, (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data)
+    })
+}
+function createProduct(req, res, next) {
+    const { title, price } = req.query;
+    productClient.createProduct({ title, price }, (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data)
+    })
+}
+function updateProduct(req, res, next) {
+    const data = req.query;
+    productClient.updateProduct(data, (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data)
+    })
+}
+function deleteProduct(req, res, next) {
+    const { id } = req.params;
+    productClient.deleteProduct({ id }, (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data)
+    })
+}
+
+module.exports = {
+    listProduct,
+    getProduct,
+    createProduct,
+    updateProduct,
+    deleteProduct
+}

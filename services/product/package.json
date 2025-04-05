@@ -1,9 +1,9 @@
 {
   "name": "product",
   "version": "1.0.0",
-  "main": "product.serivce.js",
+  "main": "product.service.js",
   "scripts": {
-    "start": "nodemon node product.serivce.js"
+    "start": "nodemon node product.service.js"
   },
   "keywords": [],
   "author": "",
